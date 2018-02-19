@@ -38,7 +38,7 @@ protected:
 	Button remove;
 	Button add;
 	Button create;
-	int x,i,j,y = 0;
+	int i,j,z = 0;
 	int numerical_value;
 
 	int OnCreate(CREATESTRUCT* pcs)
@@ -72,6 +72,7 @@ protected:
 			EnableWindow(GetDlgItem(*this, IDC_REMOVE), true);
 			EnableWindow(GetDlgItem(*this, IDC_EXECUTE), true);
 			SetDlgItemText(*this, IDC_EDIT, "");
+			z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
 			break;
 		case IDC_EXECUTE:
 			//get the first command in the list box, execute, and continue... move on to the next command
@@ -79,8 +80,7 @@ protected:
 			//either apply the changes to the guibot window here, or send them elsewhere
 			if (command[0] == NULL)
 				break;
-			y = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
-			for (x;y > x;x++) 
+			for (int x = 0;z > x;x++) 
 			{
 				SendMessage(GetDlgItem(*this, IDC_LB), LB_GETTEXT, x, (LPARAM)command);
 				//number saver
@@ -114,11 +114,11 @@ protected:
 			currpos = {600,100};
 			break;
 		case IDC_REMOVE:
-			int x = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCURSEL, NULL, NULL);
-			if (x != LB_ERR)
-				SendMessage(GetDlgItem(*this, IDC_LB), LB_DELETESTRING, x, NULL);
-			x = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
-			if (x == 0) {
+			z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCURSEL, NULL, NULL);
+			if (z != LB_ERR)
+				SendMessage(GetDlgItem(*this, IDC_LB), LB_DELETESTRING, z, NULL);
+			z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
+			if (z == 0) {
 				EnableWindow(GetDlgItem(*this, IDC_REMOVE), false);
 				EnableWindow(GetDlgItem(*this, IDC_EXECUTE), false);
 			}
