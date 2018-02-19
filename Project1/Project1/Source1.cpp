@@ -80,7 +80,7 @@ protected:
 			if (command[0] == NULL)
 				break;
 			y = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
-			for (y;y >= 0;y--) 
+			for (x;y > x;x++) 
 			{
 				SendMessage(GetDlgItem(*this, IDC_LB), LB_GETTEXT, x, (LPARAM)command);
 				//number saver
@@ -105,7 +105,6 @@ protected:
 				i = 0;
 				//moveguibot
 				MoveGuiBot(numerical_value, command, currpos);
-				x+=1;
 			}
 			break;
 		case IDC_CREATEBOT:
