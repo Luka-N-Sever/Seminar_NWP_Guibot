@@ -47,8 +47,8 @@ protected:
 		remove.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Remove", IDC_REMOVE, 200, 100, 50, 30);
 		execute.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Execute", IDC_EXECUTE, 200, 130, 50, 30);
 		create.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Create Bot", IDC_CREATEBOT, 200, 160, 100, 30);
-		e.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_EDIT, 250, 100, 50, 30);
-		BL.Create(*this, WS_CHILD | WS_VISIBLE, "", IDC_LB, 300, 100, 50, 100);
+		e.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_EDIT, 250, 100, 100, 30);
+		BL.Create(*this, WS_CHILD | WS_VISIBLE, "", IDC_LB, 350, 100, 100, 100);
 		EnableWindow(remove, false);
 		EnableWindow(execute, false);
 		GetClientRect(*this, &rect);
@@ -83,7 +83,8 @@ protected:
 			while (command[i] != NULL)
 			{
 				if (isdigit(command[i])) {
-					numbers[j] = (int)command[i];
+					numbers[j] = command[i];
+					command[i] = NULL;
 					j++;
 				}
 				i++;
@@ -95,12 +96,16 @@ protected:
 				numerical_value = (numbers[0] - '0') * 10 + (numbers[1] - '0');
 			if (j == 3)
 				numerical_value = (numbers[0] - '0') * 100 + (numbers[1] - '0') * 10 + (numbers[2] - '0');
+			j = 0;
+			i = 0;
+			//moveguibot
+			MoveGuiBot(numerical_value, command, currpos);
 			break;
 		case IDC_CREATEBOT:
 			if (!st)
 				st.Create(*this, WS_CHILD | WS_VISIBLE | SS_CENTER, "GUIBOT", 0, 0, 0, 60, 15);
 			SetWindowPos(st, 0, 600, 100, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-			currpos = {50,50};
+			currpos = {600,100};
 			break;
 		case IDC_REMOVE:
 			int x = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCURSEL, NULL, NULL);
@@ -143,10 +148,34 @@ protected:
 		SetWindowLong(st, GWL_STYLE, GetWindowLong(st, GWL_STYLE) | WS_BORDER);
 		SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_FRAMECHANGED | SWP_NOSIZE | SWP_NOZORDER);
 	}*/
-	void OnDestroy() {
+
+	void MoveGuiBot(int numerical_value, char command[], POINT &currpos) {
+		//FIRST TWO LETTERS OF EVERY COMMAND
+		if (command[0] == 'u' && command[1] == 'p') //up
+		{
+			currpos.y = max(currpos.y - numerical_value, rect.top);
+			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+		}
+		if (command[0] == 'd' && command[1] == 'o') //down
+		{
+			currpos.y = min(currpos.y + numerical_value, rect.bottom - 60);
+			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+		}
+		if (command[0] == 'l' && command[1] == 'e') //left
+		{
+			currpos.x = max(currpos.x - numerical_value, rect.left);
+			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+		}
+		if (command[0] == 'r' && command[1] == 'i') //right
+		{
+			currpos.x = min(currpos.x + numerical_value, rect.right - 60);
+			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+		}
+	}
+	void OnDestroy() 
+	{
 		::PostQuitMessage(0);
 	}
-
 };
 
 /*int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hp, LPSTR cmdLine, int nShow)
