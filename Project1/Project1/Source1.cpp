@@ -38,7 +38,7 @@ protected:
 	Button remove;
 	Button add;
 	Button create;
-	int x,i,j = 0;
+	int x,i,j,y = 0;
 	int numerical_value;
 
 	int OnCreate(CREATESTRUCT* pcs)
@@ -79,27 +79,34 @@ protected:
 			//either apply the changes to the guibot window here, or send them elsewhere
 			if (command[0] == NULL)
 				break;
-			//number saver
-			while (command[i] != NULL)
+			y = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
+			for (y;y >= 0;y--) 
 			{
-				if (isdigit(command[i])) {
-					numbers[j] = command[i];
-					command[i] = NULL;
-					j++;
+				SendMessage(GetDlgItem(*this, IDC_LB), LB_GETTEXT, x, (LPARAM)command);
+				//number saver
+				while (command[i] != NULL)
+				{
+					if (isdigit(command[i]))
+					{
+						numbers[j] = command[i];
+						command[i] = NULL;
+						j++;
+					}
+					i++;
 				}
-				i++;
+				//eats numbers up to 999... (- '0') to convert the char value to an integer ...ascii '0' = 48.. '1' = 49 ... 49 - 48 = 1
+				if (j == 1)
+					numerical_value = numbers[0] - '0';
+				if (j == 2)
+					numerical_value = (numbers[0] - '0') * 10 + (numbers[1] - '0');
+				if (j == 3)
+					numerical_value = (numbers[0] - '0') * 100 + (numbers[1] - '0') * 10 + (numbers[2] - '0');
+				j = 0;
+				i = 0;
+				//moveguibot
+				MoveGuiBot(numerical_value, command, currpos);
+				x+=1;
 			}
-			//eats numbers up to 999... (- '0') to convert the char value to an integer ...ascii '0' = 48.. '1' = 49 ... 49 - 48 = 1
-			if (j == 1)
-				numerical_value = numbers[0] - '0';
-			if (j == 2)
-				numerical_value = (numbers[0] - '0') * 10 + (numbers[1] - '0');
-			if (j == 3)
-				numerical_value = (numbers[0] - '0') * 100 + (numbers[1] - '0') * 10 + (numbers[2] - '0');
-			j = 0;
-			i = 0;
-			//moveguibot
-			MoveGuiBot(numerical_value, command, currpos);
 			break;
 		case IDC_CREATEBOT:
 			if (!st)
