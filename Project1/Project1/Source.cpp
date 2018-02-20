@@ -77,6 +77,12 @@ LRESULT CALLBACK Window::Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	{
 	case WM_COMMAND:		pThis->OnCommand(LOWORD(wParam)); return 0;
 	case WM_DESTROY:		pThis->OnDestroy(); return 0;
+	case WM_PAINT:
+		PAINTSTRUCT ps;
+		HDC hdc = BeginPaint(hwnd, &ps);
+		pThis->OnPaint(hdc);
+		EndPaint(hwnd, &ps);
+		return 0;
 		/*case WM_KEYDOWN:		pThis->OnKeyDown(wParam); return 0;
 		case WM_KEYUP:			pThis->OnKeyUp(wParam); return 0;
 		case WM_LBUTTONDOWN:	pThis->OnLButtonDown(GetPoint(lParam));	return 0;*/

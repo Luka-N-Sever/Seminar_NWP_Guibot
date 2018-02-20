@@ -2,8 +2,8 @@
 #include "Header1.h"
 #include<array>
 
-class Fuck : public Window {
-	std::string ClassName() override { return "STATIC"; }
+class Guibot : public Window {      //hahahahahahaha
+	std::string ClassName() override { return "ROBOT"; }
 };
 
 class Button : public Window {
@@ -28,7 +28,7 @@ protected:
 	//void OnCommand(int id);
 	//void OnDestroy();
 	RECT rect;
-	Fuck st;
+	Guibot st;
 	POINT currpos;
 	char command[10];
 	char numbers[10];
