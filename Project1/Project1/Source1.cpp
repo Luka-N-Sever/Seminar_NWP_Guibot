@@ -101,8 +101,8 @@ protected:
 				j = 0;
 				i = 0;
 				//moveguibot
-				MoveGuiBot(numerical_value, command, currpos);
-			}
+				MoveGuiBot(numerical_value, command, currpos); //BREAK
+			}													//POINTS
 			break;
 		case IDC_CREATEBOT:
 			if (!st)
@@ -156,23 +156,43 @@ protected:
 		//FIRST TWO LETTERS OF EVERY COMMAND
 		if (command[0] == 'u' && command[1] == 'p') //up
 		{
+			/*currpos.y = max(currpos.y - numerical_value, rect.top);
+			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
+			for (float f = 0; f <= numerical_value; ) {
+				SetWindowPos(st, 0, currpos.x, currpos.y - f, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+				f += 0.001;
+			}
 			currpos.y = max(currpos.y - numerical_value, rect.top);
-			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 		}
 		if (command[0] == 'd' && command[1] == 'o') //down
 		{
+			/*currpos.y = min(currpos.y + numerical_value, rect.bottom - 60);
+			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
+			for (float f = 0; f <= numerical_value; ) {
+				SetWindowPos(st, 0, currpos.x, currpos.y + f, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+				f += 0.001;
+			}
 			currpos.y = min(currpos.y + numerical_value, rect.bottom - 60);
-			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 		}
 		if (command[0] == 'l' && command[1] == 'e') //left
 		{
+			/*currpos.x = max(currpos.x - numerical_value, rect.left);
+			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
+			for (float f = 0; f <= numerical_value; ) {
+				SetWindowPos(st, 0, currpos.x - f, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+				f += 0.001;
+			}
 			currpos.x = max(currpos.x - numerical_value, rect.left);
-			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 		}
 		if (command[0] == 'r' && command[1] == 'i') //right
 		{
+			/*currpos.x = min(currpos.x + numerical_value, rect.right - 60);
+			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
+			for (float f = 0; f <= numerical_value; ) {
+				SetWindowPos(st, 0, currpos.x + f, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+				f += 0.001;
+			}
 			currpos.x = min(currpos.x + numerical_value, rect.right - 60);
-			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 		}
 	}
 	void OnDestroy() 
