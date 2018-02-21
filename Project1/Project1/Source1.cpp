@@ -2,8 +2,8 @@
 #include "Header1.h"
 #include<array>
 
-class Guibot : public Window {      //hahahahahahaha
-	std::string ClassName() override { return "ROBOT"; }
+class Guibot : public Window {      
+	std::string ClassName() override { return "STATIC"; }
 };
 
 class Button : public Window {
@@ -24,9 +24,6 @@ public:
 class MainWindow : public Window
 {
 protected:
-	//int OnCreate(CREATESTRUCT* pcs);
-	//void OnCommand(int id);
-	//void OnDestroy();
 	RECT rect;
 	Guibot st;
 	POINT currpos;
@@ -207,7 +204,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hp, LPSTR cmdLine, int nShow)
 	PostMessage(wnd, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(hib));
 	HICON his = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_V2), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
 	PostMessage(wnd, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(his));
-
 	Application app;
 	return app.Run();
 }

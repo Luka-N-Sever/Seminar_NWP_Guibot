@@ -31,6 +31,7 @@ protected:
 	virtual int OnCreate(CREATESTRUCT*) { return 0; }
 	virtual void OnCommand(int) {}
 	virtual void OnDestroy() {}
+	virtual void OnTimer(WPARAM) {}
 	virtual void OnPaint(HDC hdc) {}
 	/*virtual void OnLButtonDown(POINT p) { }*/
 	/*virtual void OnKeyDown(int vk) { }

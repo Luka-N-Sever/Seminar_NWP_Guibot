@@ -77,7 +77,8 @@ LRESULT CALLBACK Window::Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	{
 	case WM_COMMAND:		pThis->OnCommand(LOWORD(wParam)); return 0;
 	case WM_DESTROY:		pThis->OnDestroy(); return 0;
-	case WM_PAINT:
+	case WM_TIMER:			pThis->OnTimer(wParam);	return 0;
+		case WM_PAINT:
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hwnd, &ps);
 		pThis->OnPaint(hdc);
