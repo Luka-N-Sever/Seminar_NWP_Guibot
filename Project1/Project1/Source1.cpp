@@ -1,6 +1,8 @@
 #include "Header.h"
 #include "Header1.h"
+#include <math.h>
 #include<array>
+# define M_PI           3.14159265358979323846  /* pi */
 
 class Guibot : public Window {      
 	std::string ClassName() override { return "STATIC"; }
@@ -35,7 +37,7 @@ protected:
 	Button remove;
 	Button add;
 	Button create;
-	int i,j,z = 0;
+	int i, j, z = 0;
 	int numerical_value;
 
 	int OnCreate(CREATESTRUCT* pcs)
@@ -77,7 +79,7 @@ protected:
 			//either apply the changes to the guibot window here, or send them elsewhere
 			if (command[0] == NULL)
 				break;
-			for (int x = 0;z > x;x++) 
+			for (int x = 0;z > x;x++)
 			{
 				SendMessage(GetDlgItem(*this, IDC_LB), LB_GETTEXT, x, (LPARAM)command);
 				//number saver
@@ -108,7 +110,7 @@ protected:
 			if (!st)
 				st.Create(*this, WS_CHILD | WS_VISIBLE | SS_CENTER, "GUIBOT", 0, 0, 0, 60, 15);
 			SetWindowPos(st, 0, 600, 100, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-			currpos = {600,100};
+			currpos = { 600,100 };
 			break;
 		case IDC_REMOVE:
 			z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCURSEL, NULL, NULL);
@@ -158,9 +160,8 @@ protected:
 		{
 			/*currpos.y = max(currpos.y - numerical_value, rect.top);
 			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
-			for (float f = 0; f <= numerical_value; ) {
-				SetWindowPos(st, 0, currpos.x, currpos.y - f, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-				f += 0.001;
+			for (float f = 0; f <= numerical_value; f += 0.001) {
+				SetWindowPos(st, NULL, currpos.x, currpos.y - f, NULL, NULL, SWP_NOSIZE | SWP_NOZORDER);
 			}
 			currpos.y = max(currpos.y - numerical_value, rect.top);
 		}
@@ -168,19 +169,17 @@ protected:
 		{
 			/*currpos.y = min(currpos.y + numerical_value, rect.bottom - 60);
 			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
-			for (float f = 0; f <= numerical_value; ) {
-				SetWindowPos(st, 0, currpos.x, currpos.y + f, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-				f += 0.001;
+			for (float f = 0; f <= numerical_value; f += 0.001) {
+				SetWindowPos(st, NULL, currpos.x, currpos.y + f, NULL, NULL, SWP_NOSIZE | SWP_NOZORDER);
 			}
-			currpos.y = min(currpos.y + numerical_value, rect.bottom - 60);
+			currpos.y = min(currpos.y + numerical_value, rect.bottom - 15);
 		}
 		if (command[0] == 'l' && command[1] == 'e') //left
 		{
 			/*currpos.x = max(currpos.x - numerical_value, rect.left);
 			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
-			for (float f = 0; f <= numerical_value; ) {
+			for (float f = 0; f <= numerical_value; f += 0.001) {
 				SetWindowPos(st, 0, currpos.x - f, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-				f += 0.001;
 			}
 			currpos.x = max(currpos.x - numerical_value, rect.left);
 		}
@@ -188,16 +187,38 @@ protected:
 		{
 			/*currpos.x = min(currpos.x + numerical_value, rect.right - 60);
 			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
-			for (float f = 0; f <= numerical_value; ) {
-				SetWindowPos(st, 0, currpos.x + f, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-				f += 0.001;
+			for (float f = 0; f <= numerical_value; f += 0.001) {
+				SetWindowPos(st, 0, currpos.x + f, currpos.y, 0, 0,  SWP_NOSIZE | SWP_NOZORDER);
 			}
 			currpos.x = min(currpos.x + numerical_value, rect.right - 60);
 		}
 	}
-	void OnDestroy() 
+	void OnDestroy()
 	{
 		::PostQuitMessage(0);
+	}
+	void OnPaint(HDC hdc, HWND hw){
+		float X, Y;
+		MoveToEx(hdc, 100, 400, NULL);
+		LineTo(hdc, 200, 400);
+		MoveToEx(hdc, 100, 400, NULL);
+		X = 100 - (100 * cos(M_PI/2));
+		Y = 400 - (100 * sin(M_PI/2));
+		LineTo(hdc, X, Y);
+		/*float angle, X, Y;
+		RECT rect;
+		GetClientRect(hw, &rect);
+		MoveToEx(hdc, 100, 400, NULL);
+		for (angle = 0; angle >= 360; angle += 0.001) {
+			if (angle == 0.000)
+				LineTo(hdc, 600, 400);
+			else {
+				X = 100 + (500 * cos(angle));
+				Y = 400 + (500 * sin(angle));
+				LineTo(hdc, X, Y);
+			}
+			InvalidateRect(hw, &rect, 0);
+		}*/
 	}
 };
 

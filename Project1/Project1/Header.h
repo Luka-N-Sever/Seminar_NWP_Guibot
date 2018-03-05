@@ -32,7 +32,7 @@ protected:
 	virtual void OnCommand(int) {}
 	virtual void OnDestroy() {}
 	virtual void OnTimer(WPARAM) {}
-	virtual void OnPaint(HDC hdc) {}
+	virtual void OnPaint(HDC hdc, HWND hw) {}
 	/*virtual void OnLButtonDown(POINT p) { }*/
 	/*virtual void OnKeyDown(int vk) { }
 	virtual void OnKeyUp(int vk) { }*/
