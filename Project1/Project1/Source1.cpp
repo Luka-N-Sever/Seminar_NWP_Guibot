@@ -202,8 +202,8 @@ protected:
 		MoveToEx(hdc, 100, 400, NULL);
 		LineTo(hdc, 200, 400);
 		MoveToEx(hdc, 100, 400, NULL);
-		X = 100 - (100 * cos(M_PI/2));
-		Y = 400 - (100 * sin(M_PI/2));
+		X = 100 + (100 * cos(5*M_PI/4));
+		Y = 400 - (100 * sin(5*M_PI/4));
 		LineTo(hdc, X, Y);
 		/*float angle, X, Y;
 		RECT rect;
