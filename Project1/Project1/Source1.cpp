@@ -202,8 +202,8 @@ protected:
 		MoveToEx(hdc, 100, 400, NULL);
 		LineTo(hdc, 200, 400);
 		MoveToEx(hdc, 100, 400, NULL);
-		X = 100 + (100 * cos(5*M_PI/4));
-		Y = 400 - (100 * sin(5*M_PI/4));
+		X = 100 + (100 * cos(30*M_PI/180)); //30 degrees!!
+		Y = 400 - (100 * sin(30*M_PI/180));
 		LineTo(hdc, X, Y);
 		/*float angle, X, Y;
 		RECT rect;
@@ -237,7 +237,7 @@ protected:
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hp, LPSTR cmdLine, int nShow)
 {
-	HMENU hMenu = LoadMenu(hInstance, MAKEINTRESOURCE(IDM_V2));
+	HMENU hMenu = LoadMenu(hInstance, MAKEINTRESOURCE(IDM_V2)); //resource file for menues...
 	MainWindow wnd;
 	wnd.Create(NULL, WS_OVERLAPPEDWINDOW | WS_VISIBLE, "GUIBOT 0.0", (int)hMenu);
 	// set icons
