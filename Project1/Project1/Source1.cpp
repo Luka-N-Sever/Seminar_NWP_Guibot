@@ -1,16 +1,25 @@
 #include "Header.h"
 #include "Header1.h"
 #include <math.h>
-#include<array>
-# define M_PI           3.14159265358979323846  /* pi */
-
-class Guibot : public Window {      
-	std::string ClassName() override { return "STATIC"; }
-};
+//#include <conio.h>
+//#include <dos.h>
+//#include <graphics.h>
+#include <array>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <fstream>
+//#include "Commands.txt"
+# define M_PI 3.14159265358979323846  /* pi */
 
 class Button : public Window {
 public:
 	std::string ClassName() override { return "Button"; }
+};
+
+class Guibot : public Window {
+public:
+	std::string ClassName() override { return "STATIC"; }
 };
 
 class Edit : public Window {
@@ -31,26 +40,49 @@ protected:
 	POINT currpos;
 	char command[10];
 	char numbers[10];
+	std::string commands[10]; //will set the length of this array according to the amount of commands in the txt file...
 	ListBox BL;
+	ListBox BL2;
 	Edit e;
 	Button execute;
 	Button remove;
 	Button add;
 	Button create;
-	int i, j, z = 0;
+	
+	
+	int i, j, k, z = 0;
 	int numerical_value;
-
+	/*Re-design: Read the commands from a txt file...populate a list box with them...read the numerical values from an edit control.
+	On 'add' concatenate the choosen command and the numerical value, put it in a second list box, that will be executed*/
 	int OnCreate(CREATESTRUCT* pcs)
 	{
+		std::ifstream file("Commands.txt");
+		std::string str;
+		while (std::getline(file, str, '\n'))
+			commands[k++] = str;
+		file.close();
+
+		k = 0;
+			
 		add.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Add", IDC_ADD, 250, 130, 50, 30);
 		remove.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Remove", IDC_REMOVE, 200, 100, 50, 30);
 		execute.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Execute", IDC_EXECUTE, 200, 130, 50, 30);
 		create.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Create Bot", IDC_CREATEBOT, 200, 160, 100, 30);
 		e.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_EDIT, 250, 100, 100, 30);
-		BL.Create(*this, WS_CHILD | WS_VISIBLE, "", IDC_LB, 350, 100, 100, 100);
+		BL.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_LB, 350, 100, 100, 100);
+		BL2.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_LB2, 450, 100, 100, 100);
 		EnableWindow(remove, false);
 		EnableWindow(execute, false);
 		GetClientRect(*this, &rect);
+		
+		while (true)
+		{
+			if (commands[k]=="")
+				break;
+			SendMessage(GetDlgItem(*this, IDC_LB2), LB_ADDSTRING, NULL, (LPARAM)commands[k].c_str());
+			k++;
+		}
+
 		return 0;
 	}
 
@@ -197,14 +229,17 @@ protected:
 	{
 		::PostQuitMessage(0);
 	}
-	void OnPaint(HDC hdc, HWND hw){
+	void OnPaint(HDC hdc, HWND hw) {
 		float X, Y;
+		int angle;
 		MoveToEx(hdc, 100, 400, NULL);
 		LineTo(hdc, 200, 400);
-		MoveToEx(hdc, 100, 400, NULL);
-		X = 100 + (100 * cos(30*M_PI/180)); //30 degrees!!
-		Y = 400 - (100 * sin(30*M_PI/180));
-		LineTo(hdc, X, Y);
+		for (angle = 270; angle <= 360; angle++){
+			MoveToEx(hdc, 100, 400, NULL);
+			X = 100 + (100 * cos(angle*M_PI / 180)); 
+			Y = 400 - (100 * sin(angle*M_PI / 180));
+			LineTo(hdc, X, Y);
+		}
 		/*float angle, X, Y;
 		RECT rect;
 		GetClientRect(hw, &rect);
@@ -248,3 +283,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hp, LPSTR cmdLine, int nShow)
 	Application app;
 	return app.Run();
 }
+/*U redu, pokupio sam trenutno stanje repozitorija i projekt se build-a.
+
+Ali, kao što smo se dogovorili, prvo dovedite projekt u stanje da se ista
+moze pratiti - fileovi se zovu source/header, sve funkcije su u tijelu
+klase, funkcije su prevelike i ima brdo zakomentiranog koda. Javite se kad
+budete unijeli promjene i tada napisite sto bi (i kako) trebalo raditi.
+
+Za pocetak: 
+- nadam se da necete imati (neinicijalizirane) membere koji se zovu i, j,
+z (?!)
+- ima puno previse konstanti po kodu
+- mozete koristiti std::string umjesto char[10] (a zasto ne koristite
+Unicode?)
+
+Pozdrav
+Nenad Caklovic*/

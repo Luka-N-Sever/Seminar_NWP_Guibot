@@ -2,8 +2,10 @@
 #define IDC_REMOVE 102
 #define IDC_EDIT 103
 #define IDC_LB 104
+#define IDC_LB2 107
 #define IDC_EXECUTE 105
 #define IDC_CREATEBOT 106
+
 
 #define IDI_V2 201
 
