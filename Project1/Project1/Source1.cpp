@@ -38,7 +38,7 @@ protected:
 	RECT rect;
 	Guibot st;
 	POINT currpos;
-	char command[10];
+	char command[100];
 	char numbers[10];
 	std::string commands[10]; //will set the length of this array according to the amount of commands in the txt file...
 	ListBox BL;
@@ -48,9 +48,9 @@ protected:
 	Button remove;
 	Button add;
 	Button create;
+	//NOTE TO SELF - Add a history list box, add a loop function to loop the commands in the list box a number of times, add a speed for GUIBOT speed...
 	
-	
-	int i, j, k, z = 0;
+	int i, j, k, x, number_of_numerals_in_numbers, z, number_of_characters_in_command, currselection = 0;
 	int numerical_value;
 	/*Re-design: Read the commands from a txt file...populate a list box with them...read the numerical values from an edit control.
 	On 'add' concatenate the choosen command and the numerical value, put it in a second list box, that will be executed*/
@@ -82,7 +82,7 @@ protected:
 			SendMessage(GetDlgItem(*this, IDC_LB2), LB_ADDSTRING, NULL, (LPARAM)commands[k].c_str());
 			k++;
 		}
-
+		k = 0;
 		return 0;
 	}
 
@@ -96,24 +96,53 @@ protected:
 			MessageBox(*this, "You can do some things here, I hope...", "About", MB_ICONINFORMATION);
 			break;
 		case IDC_ADD:
-			GetWindowText(GetDlgItem(*this, IDC_EDIT), command, 10);
+			number_of_characters_in_command = 0; number_of_numerals_in_numbers = 0;
+			currselection = SendMessage(GetDlgItem(*this, IDC_LB2), LB_GETCURSEL, NULL, NULL);
+			SendMessage(GetDlgItem(*this, IDC_LB2), LB_GETTEXT, currselection, (LPARAM)command);
+			GetWindowText(GetDlgItem(*this, IDC_EDIT), numbers, 10);
+			while (true)
+			{
+				if (command[number_of_characters_in_command] == '\0')
+					break;
+				number_of_characters_in_command++; //starting from 1 QED "GUIBOT" = 6
+			}
+			while(true)
+			{
+				if (numbers[number_of_numerals_in_numbers] == '\0')
+					break;
+				number_of_numerals_in_numbers++;
+			}
+			command[number_of_characters_in_command] = ' '; //HA So there's a nice looking white space 
+			number_of_characters_in_command += 1;
+			for(int i=0; i<=number_of_numerals_in_numbers; i++, x++)
+			{
+				command[number_of_characters_in_command++] = numbers[i];
+			}
+			SendMessage(GetDlgItem(*this, IDC_LB), LB_ADDSTRING, NULL, (LPARAM)command);
+			EnableWindow(GetDlgItem(*this, IDC_REMOVE), true);
+			EnableWindow(GetDlgItem(*this, IDC_EXECUTE), true);
+			//memset(numbers, 0, sizeof(numbers));
+			//memset(command, 0, sizeof(command));
+			/*number_of_characters_in_command, number_of_numerals_in_numbers = 0;*/
+			/*GetWindowText(GetDlgItem(*this, IDC_EDIT), command, 10);
 			if (command[0] == NULL)
 				break;
 			SendMessage(GetDlgItem(*this, IDC_LB), LB_ADDSTRING, NULL, (LPARAM)command);
 			EnableWindow(GetDlgItem(*this, IDC_REMOVE), true);
 			EnableWindow(GetDlgItem(*this, IDC_EXECUTE), true);
 			SetDlgItemText(*this, IDC_EDIT, "");
-			z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
+			z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);*/
 			break;
 		case IDC_EXECUTE:
 			//get the first command in the list box, execute, and continue... move on to the next command
 			//get the numeric values associated with the command
 			//either apply the changes to the guibot window here, or send them elsewhere
+			z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
 			if (command[0] == NULL)
 				break;
-			for (int x = 0;z > x;x++)
+			for (x = 0;z > x;x++)
 			{
-				SendMessage(GetDlgItem(*this, IDC_LB), LB_GETTEXT, x, (LPARAM)command);
+				SendMessage(GetDlgItem(*this, IDC_LB), LB_GETTEXT, x, (LPARAM)command); 
 				//number saver
 				while (command[i] != NULL)
 				{
@@ -135,7 +164,7 @@ protected:
 				j = 0;
 				i = 0;
 				//moveguibot
-				MoveGuiBot(numerical_value, command, currpos); //BREAK
+				MoveGuiBot(numerical_value, command, currpos);//BREAK
 			}													//POINTS
 			break;
 		case IDC_CREATEBOT:
@@ -188,7 +217,7 @@ protected:
 
 	void MoveGuiBot(int numerical_value, char command[], POINT &currpos) {
 		//FIRST TWO LETTERS OF EVERY COMMAND
-		if (command[0] == 'u' && command[1] == 'p') //up
+		if (command[0] == 'U' && command[1] == 'P') //up
 		{
 			/*currpos.y = max(currpos.y - numerical_value, rect.top);
 			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
@@ -197,7 +226,7 @@ protected:
 			}
 			currpos.y = max(currpos.y - numerical_value, rect.top);
 		}
-		if (command[0] == 'd' && command[1] == 'o') //down
+		if (command[0] == 'D' && command[1] == 'O') //down
 		{
 			/*currpos.y = min(currpos.y + numerical_value, rect.bottom - 60);
 			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
@@ -206,7 +235,7 @@ protected:
 			}
 			currpos.y = min(currpos.y + numerical_value, rect.bottom - 15);
 		}
-		if (command[0] == 'l' && command[1] == 'e') //left
+		if (command[0] == 'L' && command[1] == 'E') //left
 		{
 			/*currpos.x = max(currpos.x - numerical_value, rect.left);
 			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
@@ -215,7 +244,7 @@ protected:
 			}
 			currpos.x = max(currpos.x - numerical_value, rect.left);
 		}
-		if (command[0] == 'r' && command[1] == 'i') //right
+		if (command[0] == 'R' && command[1] == 'I') //right
 		{
 			/*currpos.x = min(currpos.x + numerical_value, rect.right - 60);
 			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
@@ -234,7 +263,7 @@ protected:
 		int angle;
 		MoveToEx(hdc, 100, 400, NULL);
 		LineTo(hdc, 200, 400);
-		for (angle = 270; angle <= 360; angle++){
+		for (angle = 270; angle <= 360; angle++){ //can put these points into a list of some sort
 			MoveToEx(hdc, 100, 400, NULL);
 			X = 100 + (100 * cos(angle*M_PI / 180)); 
 			Y = 400 - (100 * sin(angle*M_PI / 180));
