@@ -1,6 +1,7 @@
 #include "Header.h"
 #include "Header1.h"
 #include <math.h>
+#include "Source2.cpp"
 //#include <conio.h>
 //#include <dos.h>
 //#include <graphics.h>
@@ -48,7 +49,8 @@ protected:
 	Button remove;
 	Button add;
 	Button create;
-	//NOTE TO SELF - Add a history list box, add a loop function to loop the commands in the list box a number of times, add a speed for GUIBOT speed...
+	Button loop;
+	//NOTE TO SELF - add a loop function to loop the commands in the list box a number of times, add a speed for GUIBOT speed...
 	
 	int i, j, k, x, number_of_numerals_in_numbers, z, number_of_characters_in_command, currselection = 0;
 	int numerical_value;
@@ -68,6 +70,7 @@ protected:
 		remove.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Remove", IDC_REMOVE, 200, 100, 50, 30);
 		execute.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Execute", IDC_EXECUTE, 200, 130, 50, 30);
 		create.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Create Bot", IDC_CREATEBOT, 200, 160, 100, 30);
+		loop.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Loop", IDC_LOOP, 300, 130, 50, 30);
 		e.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_EDIT, 250, 100, 100, 30);
 		BL.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_LB, 350, 100, 100, 100);
 		BL2.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_LB2, 450, 100, 100, 100);
@@ -119,6 +122,9 @@ protected:
 				command[number_of_characters_in_command++] = numbers[i];
 			}
 			SendMessage(GetDlgItem(*this, IDC_LB), LB_ADDSTRING, NULL, (LPARAM)command);
+			//should add an if here so these fuckers dont turn on without there being any commands
+			if (!(isalpha(command[0])))
+				break;
 			EnableWindow(GetDlgItem(*this, IDC_REMOVE), true);
 			EnableWindow(GetDlgItem(*this, IDC_EXECUTE), true);
 			//memset(numbers, 0, sizeof(numbers));
@@ -137,6 +143,7 @@ protected:
 			//get the first command in the list box, execute, and continue... move on to the next command
 			//get the numeric values associated with the command
 			//either apply the changes to the guibot window here, or send them elsewhere
+			//should select the command that is currently being executed and highlight it for a better user experience
 			z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
 			if (command[0] == NULL)
 				break;
@@ -174,14 +181,12 @@ protected:
 			currpos = { 600,100 };
 			break;
 		case IDC_REMOVE:
-			z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCURSEL, NULL, NULL);
-			if (z != LB_ERR)
-				SendMessage(GetDlgItem(*this, IDC_LB), LB_DELETESTRING, z, NULL);
-			z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
-			if (z == 0) {
-				EnableWindow(GetDlgItem(*this, IDC_REMOVE), false);
-				EnableWindow(GetDlgItem(*this, IDC_EXECUTE), false);
-			}
+			Remove(*this);
+			break;
+		case IDC_LOOP:
+			//must get the number of times the commands will be looped
+			//must get the commnads from LB2 that will be looped
+			//must feed those commands to the function that does the moving and loop them
 			break;
 		}
 	}

@@ -5,7 +5,7 @@
 #define IDC_LB2 107
 #define IDC_EXECUTE 105
 #define IDC_CREATEBOT 106
-
+#define IDC_LOOP 108
 
 #define IDI_V2 201
 
