@@ -1,7 +1,6 @@
 #include "Header.h"
 #include "Header1.h"
 #include <math.h>
-#include "Source2.cpp"
 //#include <conio.h>
 //#include <dos.h>
 //#include <graphics.h>
@@ -51,7 +50,8 @@ protected:
 	Button create;
 	Button loop;
 	//NOTE TO SELF - add a loop function to loop the commands in the list box a number of times, add a speed for GUIBOT speed...
-	
+	void CreateBot(HWND hw, Guibot st, POINT point);
+	void Remove(HWND hw);
 	int i, j, k, x, number_of_numerals_in_numbers, z, number_of_characters_in_command, currselection = 0;
 	int numerical_value;
 	/*Re-design: Read the commands from a txt file...populate a list box with them...read the numerical values from an edit control.
@@ -175,10 +175,7 @@ protected:
 			}													//POINTS
 			break;
 		case IDC_CREATEBOT:
-			if (!st)
-				st.Create(*this, WS_CHILD | WS_VISIBLE | SS_CENTER, "GUIBOT", 0, 0, 0, 60, 15);
-			SetWindowPos(st, 0, 600, 100, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-			currpos = { 600,100 };
+			CreateBot(*this, st, currpos);
 			break;
 		case IDC_REMOVE:
 			Remove(*this);
@@ -291,6 +288,23 @@ protected:
 	}
 };
 
+void MainWindow::CreateBot(HWND hw, Guibot x, POINT currpos) {
+	if (!x)
+		x.Create(hw, WS_CHILD | WS_VISIBLE | SS_CENTER, "GUIBOT", 0, 0, 0, 60, 15);
+	SetWindowPos(x, 0, 600, 100, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+	currpos = { 600,100 };
+}
+void MainWindow::Remove(HWND wh) {
+	int z = 0;
+	z = SendMessage(GetDlgItem(wh, IDC_LB), LB_GETCURSEL, NULL, NULL);
+	if (z != LB_ERR)
+		SendMessage(GetDlgItem(wh, IDC_LB), LB_DELETESTRING, z, NULL);
+	z = SendMessage(GetDlgItem(wh, IDC_LB), LB_GETCOUNT, NULL, NULL);
+	if (z == 0) {
+		EnableWindow(GetDlgItem(wh, IDC_REMOVE), false);
+		EnableWindow(GetDlgItem(wh, IDC_EXECUTE), false);
+	}
+}
 /*int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hp, LPSTR cmdLine, int nShow)
 {
 	Application app;
