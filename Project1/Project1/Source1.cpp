@@ -39,11 +39,12 @@ protected:
 	Guibot bot;
 	POINT currpos;
 	char command[100];
-	char numbers[10];
+	char numbers[3];
 	std::string commands[10]; //will set the length of this array according to the amount of commands in the txt file...
 	ListBox BL;
 	ListBox BL2;
 	Edit e;
+	Edit e2;
 	Button execute;
 	Button remove;
 	Button add;
@@ -55,6 +56,9 @@ protected:
 	void Remove(HWND hw);
 	void MoveGuiBot(Guibot& st, int nv, char chars[], POINT& point);
 	void InterpretCommand();
+	void Execute();
+	void Loop();
+	int NumberConverter(int numerals, char numbers[]);
 	int i, j, k, x, number_of_numerals_in_numbers, z, number_of_characters_in_command, currselection = 0;
 	int numerical_value;
 	/*Re-design: Read the commands from a txt file...populate a list box with them...read the numerical values from an edit control.
@@ -75,6 +79,7 @@ protected:
 		create.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Create Bot", IDC_CREATEBOT, 200, 160, 100, 30);
 		loop.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Loop", IDC_LOOP, 300, 130, 50, 30);
 		e.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_EDIT, 250, 100, 100, 30);
+		e2.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_EDIT2, 300, 160, 100, 30);
 		BL.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_LB, 350, 100, 100, 100);
 		BL2.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_LB2, 450, 100, 100, 100);
 		EnableWindow(remove, false);
@@ -120,14 +125,7 @@ protected:
 			//get the numeric values associated with the command
 			//either apply the changes to the guibot window here, or send them elsewhere
 			//should select the command that is currently being executed and highlight it for a better user experience
-			z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
-			if (command[0] == NULL)
-				break;
-			for (x = 0;z > x;x++)
-			{
-				InterpretCommand();
-				MoveGuiBot(bot, numerical_value, command, currpos);//BREAK
-			}													//POINTS
+			Execute();													//POINTS
 			break;
 		case IDC_CREATEBOT:
 			CreateBot(*this, bot, currpos);
@@ -139,6 +137,7 @@ protected:
 			//must get the number of times the commands will be looped
 			//must get the commnads from LB2 that will be looped
 			//must feed those commands to the function that does the moving and loop them
+			Loop();
 			break;
 		}
 	}
@@ -203,6 +202,39 @@ protected:
 		}*/
 	}
 };
+void MainWindow::Loop() {
+	char loops[3];
+	GetWindowText(GetDlgItem(*this, IDC_EDIT2), loops, 3);
+	int number_of_numerals = 0;
+	int loop_value;
+
+	while (loops[number_of_numerals] != NULL) 
+		number_of_numerals++;
+	loop_value = NumberConverter(number_of_numerals, loops);
+
+	for (int s = 0; s < loop_value; s++)
+		Execute();
+}
+int MainWindow::NumberConverter(int numerals, char numbers[]) {
+	int value;
+	if (numerals == 1)
+		value = numbers[0] - '0';
+	if (numerals == 2)
+		value = (numbers[0] - '0') * 10 + (numbers[1] - '0');
+	if (numerals == 3)
+		value = (numbers[0] - '0') * 100 + (numbers[1] - '0') * 10 + (numbers[2] - '0');
+	return value;
+}
+void MainWindow::Execute() {
+	z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
+	if (command[0] == NULL)
+		return;
+	for (x = 0;z > x;x++)
+	{
+		InterpretCommand();
+		MoveGuiBot(bot, numerical_value, command, currpos);//BREAK
+	}
+}
 void MainWindow::InterpretCommand() {
 	SendMessage(GetDlgItem(*this, IDC_LB), LB_GETTEXT, x, (LPARAM)command);
 	//number saver
@@ -217,12 +249,7 @@ void MainWindow::InterpretCommand() {
 		i++;
 	}
 	//eats numbers up to 999... (- '0') to convert the char value to an integer ...ascii '0' = 48.. '1' = 49 ... 49 - 48 = 1
-	if (j == 1)
-		numerical_value = numbers[0] - '0';
-	if (j == 2)
-		numerical_value = (numbers[0] - '0') * 10 + (numbers[1] - '0');
-	if (j == 3)
-		numerical_value = (numbers[0] - '0') * 100 + (numbers[1] - '0') * 10 + (numbers[2] - '0');
+	numerical_value = NumberConverter(j, numbers);
 	j = 0;
 	i = 0;
 }
