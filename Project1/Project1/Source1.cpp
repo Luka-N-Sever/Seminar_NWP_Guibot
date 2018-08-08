@@ -51,8 +51,10 @@ protected:
 	Button loop;
 	//NOTE TO SELF - add a loop function to loop the commands in the list box a number of times, add a speed for GUIBOT speed...
 	void CreateBot(HWND hw, Guibot& bot, POINT& point);
+	void Add(HWND wh);
 	void Remove(HWND hw);
 	void MoveGuiBot(Guibot& st, int nv, char chars[], POINT& point);
+	void InterpretCommand();
 	int i, j, k, x, number_of_numerals_in_numbers, z, number_of_characters_in_command, currselection = 0;
 	int numerical_value;
 	/*Re-design: Read the commands from a txt file...populate a list box with them...read the numerical values from an edit control.
@@ -100,34 +102,7 @@ protected:
 			MessageBox(*this, "You can do some things here, I hope...", "About", MB_ICONINFORMATION);
 			break;
 		case IDC_ADD:
-			number_of_characters_in_command = 0; number_of_numerals_in_numbers = 0;
-			currselection = SendMessage(GetDlgItem(*this, IDC_LB2), LB_GETCURSEL, NULL, NULL);
-			SendMessage(GetDlgItem(*this, IDC_LB2), LB_GETTEXT, currselection, (LPARAM)command);
-			GetWindowText(GetDlgItem(*this, IDC_EDIT), numbers, 10);
-			while (true)
-			{
-				if (command[number_of_characters_in_command] == '\0')
-					break;
-				number_of_characters_in_command++; //starting from 1 QED "GUIBOT" = 6
-			}
-			while(true)
-			{
-				if (numbers[number_of_numerals_in_numbers] == '\0')
-					break;
-				number_of_numerals_in_numbers++;
-			}
-			command[number_of_characters_in_command] = ' '; //HA So there's a nice looking white space 
-			number_of_characters_in_command += 1;
-			for(int i=0; i<=number_of_numerals_in_numbers; i++, x++)
-			{
-				command[number_of_characters_in_command++] = numbers[i];
-			}
-			SendMessage(GetDlgItem(*this, IDC_LB), LB_ADDSTRING, NULL, (LPARAM)command);
-			//should add an if here so these fuckers dont turn on without there being any commands
-			if (!(isalpha(command[0])))
-				break;
-			EnableWindow(GetDlgItem(*this, IDC_REMOVE), true);
-			EnableWindow(GetDlgItem(*this, IDC_EXECUTE), true);
+			Add(*this);
 			//memset(numbers, 0, sizeof(numbers));
 			//memset(command, 0, sizeof(command));
 			/*number_of_characters_in_command, number_of_numerals_in_numbers = 0;*/
@@ -150,28 +125,7 @@ protected:
 				break;
 			for (x = 0;z > x;x++)
 			{
-				SendMessage(GetDlgItem(*this, IDC_LB), LB_GETTEXT, x, (LPARAM)command); 
-				//number saver
-				while (command[i] != NULL)
-				{
-					if (isdigit(command[i]))
-					{
-						numbers[j] = command[i];
-						command[i] = NULL;
-						j++;
-					}
-					i++;
-				}
-				//eats numbers up to 999... (- '0') to convert the char value to an integer ...ascii '0' = 48.. '1' = 49 ... 49 - 48 = 1
-				if (j == 1)
-					numerical_value = numbers[0] - '0';
-				if (j == 2)
-					numerical_value = (numbers[0] - '0') * 10 + (numbers[1] - '0');
-				if (j == 3)
-					numerical_value = (numbers[0] - '0') * 100 + (numbers[1] - '0') * 10 + (numbers[2] - '0');
-				j = 0;
-				i = 0;
-				//moveguibot
+				InterpretCommand();
 				MoveGuiBot(bot, numerical_value, command, currpos);//BREAK
 			}													//POINTS
 			break;
@@ -249,7 +203,59 @@ protected:
 		}*/
 	}
 };
-
+void MainWindow::InterpretCommand() {
+	SendMessage(GetDlgItem(*this, IDC_LB), LB_GETTEXT, x, (LPARAM)command);
+	//number saver
+	while (command[i] != NULL)
+	{
+		if (isdigit(command[i]))
+		{
+			numbers[j] = command[i];
+			command[i] = NULL;
+			j++;
+		}
+		i++;
+	}
+	//eats numbers up to 999... (- '0') to convert the char value to an integer ...ascii '0' = 48.. '1' = 49 ... 49 - 48 = 1
+	if (j == 1)
+		numerical_value = numbers[0] - '0';
+	if (j == 2)
+		numerical_value = (numbers[0] - '0') * 10 + (numbers[1] - '0');
+	if (j == 3)
+		numerical_value = (numbers[0] - '0') * 100 + (numbers[1] - '0') * 10 + (numbers[2] - '0');
+	j = 0;
+	i = 0;
+}
+void MainWindow::Add(HWND wh) {
+	number_of_characters_in_command = 0; number_of_numerals_in_numbers = 0;
+	currselection = SendMessage(GetDlgItem(*this, IDC_LB2), LB_GETCURSEL, NULL, NULL);
+	SendMessage(GetDlgItem(*this, IDC_LB2), LB_GETTEXT, currselection, (LPARAM)command);
+	GetWindowText(GetDlgItem(*this, IDC_EDIT), numbers, 10);
+	while (true)
+	{
+		if (command[number_of_characters_in_command] == '\0')
+			break;
+		number_of_characters_in_command++; //starting from 1 QED "GUIBOT" = 6
+	}
+	while (true)
+	{
+		if (numbers[number_of_numerals_in_numbers] == '\0')
+			break;
+		number_of_numerals_in_numbers++;
+	}
+	command[number_of_characters_in_command] = ' '; //HA So there's a nice looking white space 
+	number_of_characters_in_command += 1;
+	for (int i = 0; i <= number_of_numerals_in_numbers; i++, x++)
+	{
+		command[number_of_characters_in_command++] = numbers[i];
+	}
+	SendMessage(GetDlgItem(*this, IDC_LB), LB_ADDSTRING, NULL, (LPARAM)command);
+	//should add an if here so these fuckers dont turn on without there being any commands
+	if (!(isalpha(command[0])))
+		return;
+	EnableWindow(GetDlgItem(*this, IDC_REMOVE), true);
+	EnableWindow(GetDlgItem(*this, IDC_EXECUTE), true);
+}
 void MainWindow::CreateBot(HWND hw, Guibot& st, POINT& currpos) {
 	if (!st)
 		st.Create(hw, WS_CHILD | WS_VISIBLE | SS_CENTER, "GUIBOT", 0, 0, 0, 60, 15);
