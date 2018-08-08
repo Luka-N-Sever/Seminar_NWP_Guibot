@@ -36,7 +36,7 @@ class MainWindow : public Window
 {
 protected:
 	RECT rect;
-	Guibot st;
+	Guibot bot;
 	POINT currpos;
 	char command[100];
 	char numbers[10];
@@ -50,8 +50,9 @@ protected:
 	Button create;
 	Button loop;
 	//NOTE TO SELF - add a loop function to loop the commands in the list box a number of times, add a speed for GUIBOT speed...
-	void CreateBot(HWND hw, Guibot st, POINT point);
+	void CreateBot(HWND hw, Guibot& bot, POINT& point);
 	void Remove(HWND hw);
+	void MoveGuiBot(Guibot& st, int nv, char chars[], POINT& point);
 	int i, j, k, x, number_of_numerals_in_numbers, z, number_of_characters_in_command, currselection = 0;
 	int numerical_value;
 	/*Re-design: Read the commands from a txt file...populate a list box with them...read the numerical values from an edit control.
@@ -171,11 +172,11 @@ protected:
 				j = 0;
 				i = 0;
 				//moveguibot
-				MoveGuiBot(numerical_value, command, currpos);//BREAK
+				MoveGuiBot(bot, numerical_value, command, currpos);//BREAK
 			}													//POINTS
 			break;
 		case IDC_CREATEBOT:
-			CreateBot(*this, st, currpos);
+			CreateBot(*this, bot, currpos);
 			break;
 		case IDC_REMOVE:
 			Remove(*this);
@@ -217,45 +218,6 @@ protected:
 		SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_FRAMECHANGED | SWP_NOSIZE | SWP_NOZORDER);
 	}*/
 
-	void MoveGuiBot(int numerical_value, char command[], POINT &currpos) {
-		//FIRST TWO LETTERS OF EVERY COMMAND
-		if (command[0] == 'U' && command[1] == 'P') //up
-		{
-			/*currpos.y = max(currpos.y - numerical_value, rect.top);
-			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
-			for (float f = 0; f <= numerical_value; f += 0.001) {
-				SetWindowPos(st, NULL, currpos.x, currpos.y - f, NULL, NULL, SWP_NOSIZE | SWP_NOZORDER);
-			}
-			currpos.y = max(currpos.y - numerical_value, rect.top);
-		}
-		if (command[0] == 'D' && command[1] == 'O') //down
-		{
-			/*currpos.y = min(currpos.y + numerical_value, rect.bottom - 60);
-			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
-			for (float f = 0; f <= numerical_value; f += 0.001) {
-				SetWindowPos(st, NULL, currpos.x, currpos.y + f, NULL, NULL, SWP_NOSIZE | SWP_NOZORDER);
-			}
-			currpos.y = min(currpos.y + numerical_value, rect.bottom - 15);
-		}
-		if (command[0] == 'L' && command[1] == 'E') //left
-		{
-			/*currpos.x = max(currpos.x - numerical_value, rect.left);
-			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
-			for (float f = 0; f <= numerical_value; f += 0.001) {
-				SetWindowPos(st, 0, currpos.x - f, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-			}
-			currpos.x = max(currpos.x - numerical_value, rect.left);
-		}
-		if (command[0] == 'R' && command[1] == 'I') //right
-		{
-			/*currpos.x = min(currpos.x + numerical_value, rect.right - 60);
-			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
-			for (float f = 0; f <= numerical_value; f += 0.001) {
-				SetWindowPos(st, 0, currpos.x + f, currpos.y, 0, 0,  SWP_NOSIZE | SWP_NOZORDER);
-			}
-			currpos.x = min(currpos.x + numerical_value, rect.right - 60);
-		}
-	}
 	void OnDestroy()
 	{
 		::PostQuitMessage(0);
@@ -288,10 +250,10 @@ protected:
 	}
 };
 
-void MainWindow::CreateBot(HWND hw, Guibot x, POINT currpos) {
-	if (!x)
-		x.Create(hw, WS_CHILD | WS_VISIBLE | SS_CENTER, "GUIBOT", 0, 0, 0, 60, 15);
-	SetWindowPos(x, 0, 600, 100, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+void MainWindow::CreateBot(HWND hw, Guibot& st, POINT& currpos) {
+	if (!st)
+		st.Create(hw, WS_CHILD | WS_VISIBLE | SS_CENTER, "GUIBOT", 0, 0, 0, 60, 15);
+	SetWindowPos(st, 0, 600, 100, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 	currpos = { 600,100 };
 }
 void MainWindow::Remove(HWND wh) {
@@ -303,6 +265,45 @@ void MainWindow::Remove(HWND wh) {
 	if (z == 0) {
 		EnableWindow(GetDlgItem(wh, IDC_REMOVE), false);
 		EnableWindow(GetDlgItem(wh, IDC_EXECUTE), false);
+	}
+}
+void MainWindow::MoveGuiBot(Guibot& st, int numerical_value, char command[], POINT& currpos) {
+	//FIRST TWO LETTERS OF EVERY COMMAND
+	if (command[0] == 'U' && command[1] == 'P') //up
+	{
+		/*currpos.y = max(currpos.y - numerical_value, rect.top);
+		SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
+		for (float f = 0; f <= numerical_value; f += 0.001) {
+			SetWindowPos(st, NULL, currpos.x, currpos.y - f, NULL, NULL, SWP_NOSIZE | SWP_NOZORDER);
+		}
+		currpos.y = max(currpos.y - numerical_value, rect.top);
+	}
+	if (command[0] == 'D' && command[1] == 'O') //down
+	{
+		/*currpos.y = min(currpos.y + numerical_value, rect.bottom - 60);
+		SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
+		for (float f = 0; f <= numerical_value; f += 0.001) {
+			SetWindowPos(st, NULL, currpos.x, currpos.y + f, NULL, NULL, SWP_NOSIZE | SWP_NOZORDER);
+		}
+		currpos.y = min(currpos.y + numerical_value, rect.bottom - 15);
+	}
+	if (command[0] == 'L' && command[1] == 'E') //left
+	{
+		/*currpos.x = max(currpos.x - numerical_value, rect.left);
+		SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
+		for (float f = 0; f <= numerical_value; f += 0.001) {
+			SetWindowPos(st, 0, currpos.x - f, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+		}
+		currpos.x = max(currpos.x - numerical_value, rect.left);
+	}
+	if (command[0] == 'R' && command[1] == 'I') //right
+	{
+		/*currpos.x = min(currpos.x + numerical_value, rect.right - 60);
+		SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
+		for (float f = 0; f <= numerical_value; f += 0.001) {
+			SetWindowPos(st, 0, currpos.x + f, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+		}
+		currpos.x = min(currpos.x + numerical_value, rect.right - 60);
 	}
 }
 /*int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hp, LPSTR cmdLine, int nShow)
