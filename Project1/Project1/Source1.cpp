@@ -79,12 +79,12 @@ protected:
 		create.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Create Bot", IDC_CREATEBOT, 200, 160, 100, 30);
 		loop.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "Loop", IDC_LOOP, 300, 130, 50, 30);
 		e.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_EDIT, 250, 100, 100, 30);
-		e2.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_EDIT2, 300, 160, 100, 30);
+		e2.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_EDIT2, 300, 160, 50, 30);
 		BL.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_LB, 350, 100, 100, 100);
 		BL2.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_LB2, 450, 100, 100, 100);
 		EnableWindow(remove, false);
 		EnableWindow(execute, false);
-		GetClientRect(*this, &rect);
+		//GetClientRect(*this, &rect);
 		
 		while (true)
 		{
@@ -108,24 +108,10 @@ protected:
 			break;
 		case IDC_ADD:
 			Add(*this);
-			//memset(numbers, 0, sizeof(numbers));
-			//memset(command, 0, sizeof(command));
-			/*number_of_characters_in_command, number_of_numerals_in_numbers = 0;*/
-			/*GetWindowText(GetDlgItem(*this, IDC_EDIT), command, 10);
-			if (command[0] == NULL)
-				break;
-			SendMessage(GetDlgItem(*this, IDC_LB), LB_ADDSTRING, NULL, (LPARAM)command);
-			EnableWindow(GetDlgItem(*this, IDC_REMOVE), true);
-			EnableWindow(GetDlgItem(*this, IDC_EXECUTE), true);
-			SetDlgItemText(*this, IDC_EDIT, "");
-			z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);*/
 			break;
 		case IDC_EXECUTE:
-			//get the first command in the list box, execute, and continue... move on to the next command
-			//get the numeric values associated with the command
-			//either apply the changes to the guibot window here, or send them elsewhere
 			//should select the command that is currently being executed and highlight it for a better user experience
-			Execute();													//POINTS
+			Execute();												
 			break;
 		case IDC_CREATEBOT:
 			CreateBot(*this, bot, currpos);
@@ -134,42 +120,10 @@ protected:
 			Remove(*this);
 			break;
 		case IDC_LOOP:
-			//must get the number of times the commands will be looped
-			//must get the commnads from LB2 that will be looped
-			//must feed those commands to the function that does the moving and loop them
 			Loop();
 			break;
 		}
 	}
-
-	/*void OnLButtonDown(POINT p) {
-		if (!st)
-			st.Create(*this, WS_CHILD | WS_VISIBLE | SS_CENTER, "GUIBOT", 0, p.x, p.y, 60, 15);
-		SetWindowPos(st, 0, p.x, p.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-		currpos = p;
-	}*/
-	/*void OnKeyUp(int vk) {
-
-		if (st) {
-			SetWindowLong(st, GWL_STYLE, GetWindowLong(st, GWL_STYLE) & ~WS_BORDER);
-			SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER);
-		}
-	}*/
-	/*void OnKeyDown(int vk) {
-
-		RECT rect;
-		GetClientRect(*this, &rect);
-		int movement;
-		movement = (GetKeyState(VK_CONTROL) < 0) ? 10 : 1;
-		switch (vk) {
-		case VK_LEFT: currpos.x = max(currpos.x - movement, rect.left); break;
-		case VK_RIGHT:currpos.x = min(currpos.x + movement, rect.right - 20); break;
-		case VK_UP: currpos.y = max(currpos.y - movement, rect.top); break;
-		case VK_DOWN: currpos.y = min(currpos.y + movement, rect.bottom - 20); break;
-		}
-		SetWindowLong(st, GWL_STYLE, GetWindowLong(st, GWL_STYLE) | WS_BORDER);
-		SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_FRAMECHANGED | SWP_NOSIZE | SWP_NOZORDER);
-	}*/
 
 	void OnDestroy()
 	{
@@ -186,22 +140,9 @@ protected:
 			Y = 400 - (100 * sin(angle*M_PI / 180));
 			LineTo(hdc, X, Y);
 		}
-		/*float angle, X, Y;
-		RECT rect;
-		GetClientRect(hw, &rect);
-		MoveToEx(hdc, 100, 400, NULL);
-		for (angle = 0; angle >= 360; angle += 0.001) {
-			if (angle == 0.000)
-				LineTo(hdc, 600, 400);
-			else {
-				X = 100 + (500 * cos(angle));
-				Y = 400 + (500 * sin(angle));
-				LineTo(hdc, X, Y);
-			}
-			InvalidateRect(hw, &rect, 0);
-		}*/
 	}
 };
+
 void MainWindow::Loop() {
 	char loops[3];
 	GetWindowText(GetDlgItem(*this, IDC_EDIT2), loops, 3);
@@ -215,6 +156,7 @@ void MainWindow::Loop() {
 	for (int s = 0; s < loop_value; s++)
 		Execute();
 }
+
 int MainWindow::NumberConverter(int numerals, char numbers[]) {
 	int value;
 	if (numerals == 1)
@@ -225,6 +167,7 @@ int MainWindow::NumberConverter(int numerals, char numbers[]) {
 		value = (numbers[0] - '0') * 100 + (numbers[1] - '0') * 10 + (numbers[2] - '0');
 	return value;
 }
+
 void MainWindow::Execute() {
 	z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
 	if (command[0] == NULL)
@@ -235,9 +178,11 @@ void MainWindow::Execute() {
 		MoveGuiBot(bot, numerical_value, command, currpos);//BREAK
 	}
 }
+
 void MainWindow::InterpretCommand() {
+
 	SendMessage(GetDlgItem(*this, IDC_LB), LB_GETTEXT, x, (LPARAM)command);
-	//number saver
+	
 	while (command[i] != NULL)
 	{
 		if (isdigit(command[i]))
@@ -253,6 +198,7 @@ void MainWindow::InterpretCommand() {
 	j = 0;
 	i = 0;
 }
+
 void MainWindow::Add(HWND wh) {
 	number_of_characters_in_command = 0; number_of_numerals_in_numbers = 0;
 	currselection = SendMessage(GetDlgItem(*this, IDC_LB2), LB_GETCURSEL, NULL, NULL);
@@ -283,12 +229,14 @@ void MainWindow::Add(HWND wh) {
 	EnableWindow(GetDlgItem(*this, IDC_REMOVE), true);
 	EnableWindow(GetDlgItem(*this, IDC_EXECUTE), true);
 }
+
 void MainWindow::CreateBot(HWND hw, Guibot& st, POINT& currpos) {
 	if (!st)
 		st.Create(hw, WS_CHILD | WS_VISIBLE | SS_CENTER, "GUIBOT", 0, 0, 0, 60, 15);
 	SetWindowPos(st, 0, 600, 100, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 	currpos = { 600,100 };
 }
+
 void MainWindow::Remove(HWND wh) {
 	int z = 0;
 	z = SendMessage(GetDlgItem(wh, IDC_LB), LB_GETCURSEL, NULL, NULL);
@@ -300,12 +248,11 @@ void MainWindow::Remove(HWND wh) {
 		EnableWindow(GetDlgItem(wh, IDC_EXECUTE), false);
 	}
 }
+
 void MainWindow::MoveGuiBot(Guibot& st, int numerical_value, char command[], POINT& currpos) {
-	//FIRST TWO LETTERS OF EVERY COMMAND
+	
 	if (command[0] == 'U' && command[1] == 'P') //up
 	{
-		/*currpos.y = max(currpos.y - numerical_value, rect.top);
-		SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
 		for (float f = 0; f <= numerical_value; f += 0.001) {
 			SetWindowPos(st, NULL, currpos.x, currpos.y - f, NULL, NULL, SWP_NOSIZE | SWP_NOZORDER);
 		}
@@ -313,8 +260,6 @@ void MainWindow::MoveGuiBot(Guibot& st, int numerical_value, char command[], POI
 	}
 	if (command[0] == 'D' && command[1] == 'O') //down
 	{
-		/*currpos.y = min(currpos.y + numerical_value, rect.bottom - 60);
-		SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
 		for (float f = 0; f <= numerical_value; f += 0.001) {
 			SetWindowPos(st, NULL, currpos.x, currpos.y + f, NULL, NULL, SWP_NOSIZE | SWP_NOZORDER);
 		}
@@ -322,8 +267,6 @@ void MainWindow::MoveGuiBot(Guibot& st, int numerical_value, char command[], POI
 	}
 	if (command[0] == 'L' && command[1] == 'E') //left
 	{
-		/*currpos.x = max(currpos.x - numerical_value, rect.left);
-		SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
 		for (float f = 0; f <= numerical_value; f += 0.001) {
 			SetWindowPos(st, 0, currpos.x - f, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 		}
@@ -331,26 +274,12 @@ void MainWindow::MoveGuiBot(Guibot& st, int numerical_value, char command[], POI
 	}
 	if (command[0] == 'R' && command[1] == 'I') //right
 	{
-		/*currpos.x = min(currpos.x + numerical_value, rect.right - 60);
-		SetWindowPos(st, 0, currpos.x, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);*/
 		for (float f = 0; f <= numerical_value; f += 0.001) {
 			SetWindowPos(st, 0, currpos.x + f, currpos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 		}
 		currpos.x = min(currpos.x + numerical_value, rect.right - 60);
 	}
 }
-/*int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hp, LPSTR cmdLine, int nShow)
-{
-	Application app;
-	MainWindow wnd;
-	wnd.Create(NULL, WS_OVERLAPPEDWINDOW | WS_VISIBLE, "NWP 4");
-	return app.Run();
-}*/
-
-
-/*void MainWindow::OnDestroy() {
-	::PostQuitMessage(0);
-}*/
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hp, LPSTR cmdLine, int nShow)
 {
