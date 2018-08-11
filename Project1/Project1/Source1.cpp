@@ -84,7 +84,7 @@ protected:
 		BL2.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_LB2, 450, 100, 100, 100);
 		EnableWindow(remove, false);
 		EnableWindow(execute, false);
-		//GetClientRect(*this, &rect);
+		GetClientRect(*this, &rect);
 		
 		while (true)
 		{
@@ -110,7 +110,6 @@ protected:
 			Add(*this);
 			break;
 		case IDC_EXECUTE:
-			//should select the command that is currently being executed and highlight it for a better user experience
 			Execute();												
 			break;
 		case IDC_CREATEBOT:
@@ -158,6 +157,7 @@ void MainWindow::Loop() {
 }
 
 int MainWindow::NumberConverter(int numerals, char numbers[]) {
+	//eats numbers up to 999... (- '0') to convert the char value to an integer ...ascii '0' = 48.. '1' = 49 ... 49 - 48 = 1
 	int value;
 	if (numerals == 1)
 		value = numbers[0] - '0';
@@ -182,7 +182,8 @@ void MainWindow::Execute() {
 void MainWindow::InterpretCommand() {
 
 	SendMessage(GetDlgItem(*this, IDC_LB), LB_GETTEXT, x, (LPARAM)command);
-	
+	SendMessage(GetDlgItem(*this, IDC_LB), LB_SETCURSEL, x, NULL);
+
 	while (command[i] != NULL)
 	{
 		if (isdigit(command[i]))
@@ -193,7 +194,6 @@ void MainWindow::InterpretCommand() {
 		}
 		i++;
 	}
-	//eats numbers up to 999... (- '0') to convert the char value to an integer ...ascii '0' = 48.. '1' = 49 ... 49 - 48 = 1
 	numerical_value = NumberConverter(j, numbers);
 	j = 0;
 	i = 0;
@@ -223,7 +223,7 @@ void MainWindow::Add(HWND wh) {
 		command[number_of_characters_in_command++] = numbers[i];
 	}
 	SendMessage(GetDlgItem(*this, IDC_LB), LB_ADDSTRING, NULL, (LPARAM)command);
-	//should add an if here so these fuckers dont turn on without there being any commands
+	
 	if (!(isalpha(command[0])))
 		return;
 	EnableWindow(GetDlgItem(*this, IDC_REMOVE), true);
