@@ -60,7 +60,7 @@ protected:
 	void Loop();
 	int NumberConverter(int numerals, char numbers[]);
 	int i, j, k, x, number_of_numerals_in_numbers, z, number_of_characters_in_command, currselection = 0;
-	int numerical_value;
+	int numerical_value = 0;
 	/*Re-design: Read the commands from a txt file...populate a list box with them...read the numerical values from an edit control.
 	On 'add' concatenate the choosen command and the numerical value, put it in a second list box, that will be executed*/
 	int OnCreate(CREATESTRUCT* pcs)
