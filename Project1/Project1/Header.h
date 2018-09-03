@@ -28,7 +28,7 @@ public:
 
 	//	messages
 protected:
-	virtual int OnCreate(CREATESTRUCT*) { return 0; }
+	virtual int OnCreate(CREATESTRUCT*, HWND hw) { return 0; }
 	virtual void OnCommand(int) {}
 	virtual void OnDestroy() {}
 	virtual void OnTimer(WPARAM) {}

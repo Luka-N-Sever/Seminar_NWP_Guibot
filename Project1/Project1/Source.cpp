@@ -69,7 +69,7 @@ LRESULT CALLBACK Window::Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 		Window* pw = reinterpret_cast<Window*>(pcs->lpCreateParams);
 		::SetWindowLong(hwnd, 0, reinterpret_cast<long>(pw));
 		pw->hw = hwnd;
-		return pw->OnCreate(pcs);
+		return pw->OnCreate(pcs, hwnd);
 	}
 
 	Window* pThis = reinterpret_cast<Window*>(::GetWindowLong(hwnd, 0));
