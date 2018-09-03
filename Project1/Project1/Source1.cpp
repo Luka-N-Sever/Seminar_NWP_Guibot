@@ -153,9 +153,7 @@ void MainWindow::Loop(HWND wh) {
 }
 
 void MainWindow::Execute() {
-	//int z = SendMessage(GetDlgItem(*this, IDC_LB), LB_GETCOUNT, NULL, NULL);
-	int numerical_value;
-	std::string commando;
+
 	if (!(steps.size()))
 		return;
 	for (std::vector<step>::iterator it = steps.begin(); it != steps.end(); ++it)
