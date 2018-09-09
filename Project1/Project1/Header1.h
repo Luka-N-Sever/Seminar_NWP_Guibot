@@ -7,10 +7,5 @@
 #define IDC_CREATEBOT 106
 #define IDC_LOOP 108
 #define IDC_EDIT2 109
-
-#define IDI_V2 201
-
-#define IDM_V2			400
-#define ID_FILE_EXIT	401
-#define ID_HELP_ABOUT	402
+#define IDC_STATIC 1101
 #pragma once

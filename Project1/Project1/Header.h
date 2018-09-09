@@ -1,11 +1,19 @@
 #pragma once
 #include <windows.h>
 #include <string>
+#include "Header2.h"
+
 
 class Application
 {
 public:
 	int Run();
+};
+
+class PicDialog : public Dialog {
+protected:
+	int IDD();
+	bool OnInitDialog(HWND hw);
 };
 
 class Window

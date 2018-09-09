@@ -22,7 +22,7 @@ bool Window::Register(const std::string& name)
 	wc.lpfnWndProc = Proc;
 	wc.lpszClassName = name.c_str();
 	wc.cbWndExtra = sizeof(Window*);
-
+	
 	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
@@ -45,7 +45,7 @@ bool Window::Create(HWND parent, DWORD style, PCSTR caption, int IdOrMenu,
 	std::string cn = ClassName();
 	if (cn.empty())
 		Register(cn = GenerateClassName());
-	hw = ::CreateWindow(cn.c_str(), caption, style, x, y, width, height, parent, (HMENU)IdOrMenu, 0, this);
+	hw = ::CreateWindow(cn.c_str(), caption, style, x, y, width, height, parent, (HMENU) IdOrMenu, 0, this);
 	return hw != 0;
 }
 

@@ -1,9 +1,10 @@
 #include "Header.h"
 #include "Header1.h"
+//#include "Header2.h"
 #include <math.h>
 //#include <conio.h>
 //#include <dos.h>
-//#include <graphics.h>
+//#include <raphics.h>
 #include <sstream>
 #include <string>
 #include <array>
@@ -12,7 +13,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-//#include "Commands.txt"
+#include <tchar.h>
+#include "resource.h""
+
 # define M_PI 3.14159265358979323846  /* pi */
 
 class Button : public Window {
@@ -34,6 +37,17 @@ class ListBox : public Window {
 public:
 	std::string ClassName() override { return "ListBox"; }
 };
+
+int PicDialog::IDD() {
+	return IDD_DIALOG1;
+}
+
+bool PicDialog::OnInitDialog(HWND hw) {
+	/*HBITMAP bmp = (HBITMAP)LoadImage(NULL, "C:/Users/Korisnik/Desktop/MathBot_EXP.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	SendDlgItemMessage(hw, IDC_STATIC, STM_SETIMAGE, (WPARAM) IMAGE_BITMAP, (LPARAM)bmp);*/
+	InvalidateRect(*this, NULL, true);
+	return true;
+}
 
 struct step { 
 	std::string cmnd;
@@ -71,7 +85,6 @@ protected:
 	void MoveGuiBot(Guibot& st, int nv, std::string commando, POINT& point);
 	void Execute();
 	void Loop(HWND wh);
-	
 	//ADD A CLEAR CONTROL
 	std::vector<struct step> steps;
 	
@@ -102,12 +115,14 @@ protected:
 	void OnCommand(int id) {
 		switch (id)
 		{
-		case ID_FILE_EXIT:
-			OnDestroy();
-			break;
-		case ID_HELP_ABOUT:
+		case ID_INFO_ABOUT:
 			MessageBox(*this, "You can do some things here, I hope...", "About", MB_ICONINFORMATION);
 			break;
+		case ID_INFO_SCHEMATIC: {PicDialog p;
+			p.DoModal(0, *this);
+			}
+			//DialogBox(NULL, MAKEINTRESOURCE(IDD_DIALOG1), *this, NULL);
+			break;	
 		case IDC_ADD:
 			Add(*this);
 			break;
@@ -135,7 +150,7 @@ protected:
 		int angle;
 		MoveToEx(hdc, 100, 400, NULL);
 		LineTo(hdc, 200, 400);
-		for (angle = 270; angle <= 360; angle++) { //can put these points into a list of some sort
+		for (angle = 270; angle <= 290; angle++) { //can put these points into a list of some sort
 			MoveToEx(hdc, 100, 400, NULL);
 			X = 100 + (100 * cos(angle*M_PI / 180));
 			Y = 400 - (100 * sin(angle*M_PI / 180));
@@ -234,14 +249,15 @@ void MainWindow::MoveGuiBot(Guibot& st, int numerical_value, std::string command
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hp, LPSTR cmdLine, int nShow)
 {
-	HMENU hMenu = LoadMenu(hInstance, MAKEINTRESOURCE(IDM_V2)); //resource file for menues...
+	HMENU hMenu = LoadMenu(hInstance, MAKEINTRESOURCE(IDM_MENU)); //resource file for menues...
+	Application app;
 	MainWindow wnd;
-	wnd.Create(NULL, WS_OVERLAPPEDWINDOW | WS_VISIBLE, "GUIBOT 0.0", (int)hMenu);
+	wnd.Create(NULL, WS_OVERLAPPEDWINDOW | WS_VISIBLE, "GUIBOT 1.0", (int)hMenu);
 	// set icons
-	HICON hib = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_V2), IMAGE_ICON, 32, 32, LR_DEFAULTCOLOR);
+	/*HICON hib = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_V2), IMAGE_ICON, 32, 32, LR_DEFAULTCOLOR);
 	PostMessage(wnd, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(hib));
 	HICON his = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_V2), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	PostMessage(wnd, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(his));
-	Application app;
+	PostMessage(wnd, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(his));*/
 	return app.Run();
 }
+
