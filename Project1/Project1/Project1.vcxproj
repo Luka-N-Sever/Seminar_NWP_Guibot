@@ -118,20 +118,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Header.h" />
-    <ClInclude Include="Header1.h" />
-    <ClInclude Include="Header2.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="win_app_dlg_class.h" />
+    <ClInclude Include="Control_IDs.h" />
+    <ClInclude Include="Dlg_def.h" />
+    <ClInclude Include="resource_IDs.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp" />
-    <ClCompile Include="Source1.cpp" />
-    <ClCompile Include="Source2.cpp" />
-    <ClCompile Include="Source3.cpp" />
+    <ClCompile Include="win_def.cpp" />
+    <ClCompile Include="win_impl.cpp" />
+    <ClCompile Include="Robo_Mov.cpp" />
+    <ClCompile Include="Dlg_def.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project1.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\..\Desktop\MathBot_EXP.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
