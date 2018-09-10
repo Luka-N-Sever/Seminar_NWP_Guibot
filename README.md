@@ -1,5 +1,5 @@
 # Seminar_NWP_Guibot
-a guibot
+
 Commands are selected from a listbox {"LEFT","UP","RIGHT","DOWN"}, and the numeric value associated
 with a movement is written into the top edit control.
 On "Add" the selected movement is added with the numeric value into another
