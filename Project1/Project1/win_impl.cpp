@@ -101,7 +101,17 @@ protected:
 		switch (id)
 		{
 		case ID_INFO_ABOUT:
-			MessageBox(*this, "You can do some things here, I hope...", "About", MB_ICONINFORMATION);
+			MessageBox(*this, "Commands are selected from the listbox and the numeric value associated" 
+				"with a movement is written into the top edit control. \n"
+				"On Add the selected movement is added with the numeric value into another"
+				"list box. \n"
+				"Commands can be added and removed from the list box. \n"
+				"On Execute the commands added to the list box with their numeric values"
+				"are executed one by one. \n"
+				"The commands can be observed taking effect on a small Guibot window"
+				"(Create Bot). \n"
+				"These commands can be looped and the number of desired loops can be"
+				"written into the bottom edit control.", "About", MB_ICONINFORMATION);
 			break;
 		case ID_INFO_SCHEMATIC: {PicDialog p;
 			p.DoModal(0, *this);
