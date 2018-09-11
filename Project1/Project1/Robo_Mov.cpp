@@ -6,131 +6,50 @@
 #include <windows.h>
 # define M_PI 3.14159265358979323846
 
-struct Leg {
+class Leg {
 
-	int Length;
+public:
+	int CurrAngle = 270; //straight down ... or rest postion (Unit Circle)
+	int Length = 100; //px
 	POINT Joint;
 	POINT Foot;
-
 	std::vector<POINT> Feet_Points;
-
-	void SetPoint(POINT p) { Joint = p; };
-	void SetLength(int length) { Length = length; };
-	void SetFootPos(POINT p) { Foot = p; };
-	void Move_Inwards_By_20_Deg(Leg leg, POINT joint, POINT foot);
-	void Move_Outwards_By_20_Deg(Leg leg, POINT joint, POINT foot);
-	void Move_From_Outwards_To_Inwards(Leg leg, POINT joint, POINT foot);
-	void Move_From_Inwards_To_Outwards(Leg leg, POINT joint, POINT foot);
+	void Move(int& CurrAngle, int TargetAngle, int OrientatinFlag); // 0 == RightLeg, 1 == LeftLeg
 };
 
-void Leg::Move_Inwards_By_20_Deg(Leg leg, POINT joint, POINT foot) {
+void Leg::Move(int& CurrAngle, int TargetAngle, int OrientationFlag) {
+	
+	int AngleDiff = 0;
+
 	if (!(Feet_Points.empty()))
 		Feet_Points.clear();
-	for (int angle = 270; angle >= 250; angle--) {
-		foot.x = joint.x + (leg.Length * cos(angle*M_PI / 180));
-		foot.y = joint.y - (leg.Length * sin(angle*M_PI / 180));
-		Feet_Points.push_back(foot);
+
+	if (OrientationFlag == 0 && TargetAngle > CurrAngle)
+		AngleDiff = 1;                                   //RightLeg Move OutWards
+	if (OrientationFlag == 0 && TargetAngle < CurrAngle)
+		AngleDiff = -1;                                  //RightLeg Move Inwards
+	if (OrientationFlag == 1 && TargetAngle > CurrAngle)
+		AngleDiff = 1;                                   //LeftLeg Move Inwards
+	if (OrientationFlag == 1 && TargetAngle < CurrAngle)
+		AngleDiff = -1;                                  //LeftLeg Move Outwards
+			
+	for (; CurrAngle != TargetAngle; CurrAngle += AngleDiff) {
+		Foot.x = Joint.x + (Length * cos(CurrAngle*M_PI / 180));
+		Foot.y = Joint.y - (Length * sin(CurrAngle*M_PI / 180));
+		Feet_Points.push_back(Foot);
 	}
-	SetFootPos(foot);
-}
-
-void Leg::Move_Outwards_By_20_Deg(Leg leg, POINT joint, POINT foot) {
-	if (!(Feet_Points.empty()))
-		Feet_Points.clear();
-	for (int angle = 270; angle <= 290; angle++) {
-		foot.x = joint.x + (leg.Length * cos(angle*M_PI / 180));
-		foot.y = joint.y - (leg.Length * sin(angle*M_PI / 180));
-		Feet_Points.push_back(foot);
-	}
-	SetFootPos(foot);
-}
-
-void Leg::Move_From_Outwards_To_Inwards(Leg leg, POINT joint, POINT foot) {
-	if (!(Feet_Points.empty()))
-		Feet_Points.clear();
-	for (int angle = 290; angle >= 250; angle--) {
-		foot.x = joint.x + (leg.Length * cos(angle*M_PI / 180));
-		foot.y = joint.y - (leg.Length * sin(angle*M_PI / 180));
-		Feet_Points.push_back(foot);
-	}
-	SetFootPos(foot);
-}
-
-void Leg::Move_From_Inwards_To_Outwards(Leg leg, POINT joint, POINT foot) {
-	if (!(Feet_Points.empty()))
-		Feet_Points.clear();
-	for (int angle = 250; angle <= 290; angle++) {
-		foot.x = joint.x + (leg.Length * cos(angle*M_PI / 180));
-		foot.y = joint.y - (leg.Length * sin(angle*M_PI / 180));
-		Feet_Points.push_back(foot);
-	}
-	SetFootPos(foot);
-}
-
-struct RightLeg : Leg {};
-
-struct LeftLeg : Leg {
-
-	//These Functions must be overwritten for the left leg because of the unit crcle!!
-	void Move_Inwards_By_20_Deg(Leg leg, POINT joint, POINT foot);
-	void Move_Outwards_By_20_Deg(Leg leg, POINT joint, POINT foot);
-	void Move_From_Outwards_To_Inwards(Leg leg, POINT joint, POINT foot);
-	void Move_From_Inwards_To_Outwards(Leg leg, POINT joint, POINT foot);
-};
-
-void LeftLeg::Move_Inwards_By_20_Deg(Leg leg, POINT joint, POINT foot){
-	if (!(Feet_Points.empty()))
-		Feet_Points.clear();
-	for (int angle = 270; angle <= 290; angle++) {
-		foot.x = joint.x + (leg.Length * cos(angle*M_PI / 180));
-		foot.y = joint.y - (leg.Length * sin(angle*M_PI / 180));
-		Feet_Points.push_back(foot);
-	}
-	SetFootPos(foot);
-}
-
-void LeftLeg::Move_Outwards_By_20_Deg(Leg leg, POINT joint, POINT foot){
-	if (!(Feet_Points.empty()))
-		Feet_Points.clear();
-	for (int angle = 270; angle >= 250; angle--) {
-		foot.x = joint.x + (leg.Length * cos(angle*M_PI / 180));
-		foot.y = joint.y - (leg.Length * sin(angle*M_PI / 180));
-		Feet_Points.push_back(foot);
-	}
-	SetFootPos(foot);
-}
-
-void LeftLeg::Move_From_Outwards_To_Inwards(Leg leg, POINT joint, POINT foot){
-	if (!(Feet_Points.empty()))
-		Feet_Points.clear();
-	for (int angle = 250; angle <= 290; angle++) {
-		foot.x = joint.x + (leg.Length * cos(angle*M_PI / 180));
-		foot.y = joint.y - (leg.Length * sin(angle*M_PI / 180));
-		Feet_Points.push_back(foot);
-	}
-	SetFootPos(foot);
-}
-
-void LeftLeg::Move_From_Inwards_To_Outwards(Leg leg, POINT joint, POINT foot){
-	if (!(Feet_Points.empty()))
-		Feet_Points.clear();
-	for (int angle = 290; angle >= 250; angle--) {
-		foot.x = joint.x + (leg.Length * cos(angle*M_PI / 180));
-		foot.y = joint.y - (leg.Length * sin(angle*M_PI / 180));
-		Feet_Points.push_back(foot);
-	}
-	SetFootPos(foot);
+	//SetFootPos(Foot);
 }
 
 struct Body {
 
 	int length;
 	POINT Center;
-	int Delta_Step;
-	RightLeg Right_L;
-	LeftLeg Left_L;
+	int Delta_Step; // For the joint positions 
+	Leg Right_L;
+	Leg Left_L;
 
-	Body(RightLeg Right_L, LeftLeg Left_L) { 
+	Body(Leg Right_L, Leg Left_L) { 
 		Center.x = (Right_L.Joint.x + Left_L.Joint.x) / 2;
 		Center.y = (Right_L.Joint.y + Left_L.Joint.y) / 2;
 	};
@@ -146,26 +65,20 @@ class MathBot {
 	void MoveRight(Body B);
 };
 
-//The movemnet of the joints is not descibed here due to the complexity of their movemnet
-// One day a hope to be able to have the time to map out their movemnet
+//The movemnet of the joints is not descibed here due to the complexity behind their movemnet
+// One day I hope to be able to have the time to map out their movemnet
 
 void MathBot::MoveLeft(Body B) {
-	B.Right_L.Move_Inwards_By_20_Deg(B.Right_L, B.Right_L.Joint, B.Right_L.Foot);
-	//B.Right_L.Feet_Points.front();
-	//or use iterator to get all of the feet points in order and do something with them while they're being spat out one by one
-	B.Left_L.Move_Outwards_By_20_Deg(B.Left_L, B.Left_L.Joint, B.Left_L.Foot);
-	B.Right_L.Move_From_Inwards_To_Outwards(B.Right_L, B.Right_L.Joint, B.Right_L.Foot);
-	B.Right_L.Joint.x + B.Delta_Step; B.Left_L.Joint.x + B.Delta_Step; B.Center.x + B.Delta_Step;
-	B.Left_L.Move_Inwards_By_20_Deg(B.Left_L, B.Left_L.Joint, B.Left_L.Foot);
-	B.Right_L.Move_Inwards_By_20_Deg(B.Right_L, B.Right_L.Joint, B.Right_L.Foot);
+	B.Right_L.Move(B.Right_L.CurrAngle, 250, 0); //In by 20 Deg
+	B.Left_L.Move(B.Left_L.CurrAngle, 250, 1); //Out by 20 Deg
+	B.Right_L.Move(B.Right_L.CurrAngle, 270, 0); //Out by 20 Deg (Back to relative rest postion)
+	B.Left_L.Move(B.Left_L.CurrAngle, 270, 1); //In by 20 Deg (Back to relative rest position)
 }
 
 void MathBot::MoveRight(Body B) {
-	B.Left_L.Move_Inwards_By_20_Deg(B.Left_L, B.Left_L.Joint, B.Left_L.Foot);
-	B.Right_L.Move_Outwards_By_20_Deg(B.Right_L, B.Right_L.Joint, B.Right_L.Foot);
-	B.Left_L.Move_From_Inwards_To_Outwards(B.Left_L, B.Left_L.Joint, B.Left_L.Foot);
-	B.Right_L.Joint.x + B.Delta_Step; B.Left_L.Joint.x + B.Delta_Step; B.Center.x + B.Delta_Step;
-	B.Right_L.Move_Inwards_By_20_Deg(B.Right_L, B.Right_L.Joint, B.Right_L.Foot);
-	B.Left_L.Move_Inwards_By_20_Deg(B.Left_L, B.Left_L.Joint, B.Left_L.Foot);
+	B.Left_L.Move(B.Left_L.CurrAngle, 290, 1); //In by 20 Deg
+	B.Right_L.Move(B.Right_L.CurrAngle, 290, 0); //Out by 20 Deg
+	B.Left_L.Move(B.Left_L.CurrAngle, 270, 1); //Out by 20 Deg (Back to relative rest postion)
+	B.Right_L.Move(B.Right_L.CurrAngle, 270, 0); //In by 20 Deg (Back to relative rest position)
 }
 

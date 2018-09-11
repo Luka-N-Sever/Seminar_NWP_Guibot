@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-class XCtrl {};
+
 
 typedef std::basic_string<TCHAR> tstring;
 

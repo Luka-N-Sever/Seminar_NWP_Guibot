@@ -27,7 +27,7 @@
     <ClInclude Include="Control_IDs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource_IDs.h">
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -51,8 +51,13 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\..\Desktop\MathBot_EXP.bmp">
+    <Image Include="MathBot_EXP.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ribbon1.mfcribbon-ms">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

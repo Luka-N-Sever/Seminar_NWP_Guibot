@@ -14,7 +14,7 @@ class PicDialog : public Dialog {
 
 protected:
 	int IDD();
-	bool OnInitDialog(HWND hw);
+	bool OnInitDialog();
 };
 
 class Window
@@ -42,7 +42,4 @@ protected:
 	virtual void OnDestroy() {}
 	virtual void OnTimer(WPARAM) {}
 	virtual void OnPaint(HDC hdc, HWND hw) {}
-	/*virtual void OnLButtonDown(POINT p) { }*/
-	/*virtual void OnKeyDown(int vk) { }
-	virtual void OnKeyUp(int vk) { }*/
 };

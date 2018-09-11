@@ -1,7 +1,7 @@
 #include <windows.h>
 #include <tchar.h>
 #include "Dlg_def.h"
-#include "resource_IDs.h"
+#include "resource.h"
 #include <map>
 
 int CALLBACK Dialog::Proc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
@@ -15,7 +15,7 @@ int CALLBACK Dialog::Proc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 	
 	if (msg == WM_PAINT) 
 	{
-		bitmap = (HBITMAP)LoadImage(GetModuleHandle("Project1.exe"), MAKEINTRESOURCE(IDB_BITMAP1), IMAGE_BITMAP, 0, 0, 0);
+		bitmap = (HBITMAP)LoadImage(GetModuleHandle("GUIBOT.exe"), MAKEINTRESOURCE(IDB_BITMAP1), IMAGE_BITMAP, 0, 0, 0);
 		hdc = BeginPaint(hw, &ps);
 		hdcMem = CreateCompatibleDC(hdc);
 		SelectObject(hdcMem, bitmap);
@@ -28,8 +28,8 @@ int CALLBACK Dialog::Proc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 			hdcMem,
 			0,
 			0,
-			3456,
-			2464,
+			533,
+			288,
 			SRCCOPY);
 		EndPaint(hw, &ps);
 	}
@@ -38,6 +38,7 @@ int CALLBACK Dialog::Proc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 		Dialog* pThis = reinterpret_cast<Dialog*>(lp);
 		pThis->hw = hw;
 		wmap[hw] = pThis;
+		SetWindowText(hw, "Schematic:");
 		return pThis->OnInitDialog(hw);
 	}
 	Dialog* pThis = wmap[hw];
@@ -57,7 +58,6 @@ int CALLBACK Dialog::Proc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 		DeleteObject(bitmap);
 		wmap.erase(hw);
 	}
-//WM_GETICON .... 127
 	return 0;
 }
 

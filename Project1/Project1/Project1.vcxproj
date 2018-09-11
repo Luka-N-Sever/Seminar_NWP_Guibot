@@ -23,6 +23,7 @@
     <ProjectGuid>{CE7767D5-9850-480A-A680-38587211A624}</ProjectGuid>
     <RootNamespace>Project1</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <ProjectName>GUIBOT</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -118,10 +119,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="win_app_dlg_class.h" />
     <ClInclude Include="Control_IDs.h" />
     <ClInclude Include="Dlg_def.h" />
-    <ClInclude Include="resource_IDs.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -134,7 +135,10 @@
     <ResourceCompile Include="Project1.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\..\Desktop\MathBot_EXP.bmp" />
+    <Image Include="MathBot_EXP.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ribbon1.mfcribbon-ms" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
