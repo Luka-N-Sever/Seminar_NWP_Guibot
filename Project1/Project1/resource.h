@@ -4,7 +4,6 @@
 //
 #define IDD_DIALOG1                     118
 #define IDB_BITMAP1                     126
-#define IDS_STRING128                   128
 #define IDM_MENU                        40000
 #define ID_INFO_ABOUT                   40001
 #define ID_INFO_SCHEMATIC               40002
