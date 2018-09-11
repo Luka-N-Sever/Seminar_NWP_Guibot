@@ -103,8 +103,8 @@ protected:
 		BL2.Create(*this, WS_CHILD | WS_VISIBLE | WS_BORDER, "", IDC_LB2, 20, 130, 100, 100);
 		
 		text1.Create(*this, WS_CHILD | WS_VISIBLE, "Numeric Value:", IDC_STATIC, 20, 50, 85, 15);
-		text2.Create(*this, WS_CHILD | WS_VISIBLE, "Select a Command:", IDC_STATIC1, 20, 110, 110, 15);
-		text3.Create(*this, WS_CHILD | WS_VISIBLE, "Add your Command:", IDC_STATIC2, 130, 50, 110, 15);
+		text2.Create(*this, WS_CHILD | WS_VISIBLE, "Select a Command:", IDC_STATIC1, 20, 110, 100, 15);
+		text3.Create(*this, WS_CHILD | WS_VISIBLE, "Add your Command:", IDC_STATIC2, 130, 50, 100, 15);
 		text4.Create(*this, WS_CHILD | WS_VISIBLE, "Remove a Selected Command:", IDC_STATIC3, 53, 280, 150, 15);
 		text5.Create(*this, WS_CHILD | WS_VISIBLE, "Loop Your Commands a Number of Times:", IDC_STATIC4, 20, 355, 210, 15);
 		text6.Create(*this, WS_CHILD | WS_VISIBLE, "Number of Loops:", IDC_STATIC5, 20, 377, 95, 15);
